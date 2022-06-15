@@ -1,99 +1,83 @@
-import { useDispatch } from "react-redux"
-import { getCosmetics } from "../../redux/reducer"
-import { Row, Input, Space, Alert } from 'antd'
-import { useEffect, useState } from 'react';
-import ReactPaginate from 'react-paginate';
+import { useDispatch } from "react-redux";
+import { getCosmetics } from "../../redux/reducer";
+import { Row, Input, Space, Alert, Pagination } from "antd";
+import { useEffect, useRef, useState } from "react";
 import Items from "./Items/Items";
-import styles from './Cosmetics.module.css'
+import styles from "./Cosmetics.module.css";
 const { Search } = Input;
 
-
 const PaginatedItems = () => {
-    const itemsPerPage = 30;
-    const dispatch = useDispatch()
-    const [items, setItems] = useState([])
-    const [deafaultItems, setDeafaultItems] = useState([])
-    const [currentItems, setCurrentItems] = useState(null);
-    const [pageCount, setPageCount] = useState(0);
-    const [error, setError] = useState(false)
-    const [itemOffset, setItemOffset] = useState(0);
+  const itemsPerPage = 30;
+  const dispatch = useDispatch();
+  const defaultItemsRef = useRef([]);
+  const [deafaultItems, setDeafaultItems] = useState([]);
+  const [items, setItems] = useState([]);
+  const [error, setError] = useState(false);
 
+  //вроде как лишнее
 
-    useEffect(() => {
-        async function asyncFn() {
-            const res = await dispatch(getCosmetics())
-            setItems(res)
-            setDeafaultItems(res)
-        }
-        asyncFn();
-    }, [])
+  async function asyncFn() {
+    const res = await dispatch(getCosmetics());
+    setItems(res.slice(0, 30));
+    setDeafaultItems(res);
+    defaultItemsRef.current = res;
+  }
 
-    useEffect(() => {
-        const endOffset = itemOffset + itemsPerPage;
-        setCurrentItems(items.slice(itemOffset, endOffset));
-        setPageCount(Math.ceil(items.length / itemsPerPage));
-    }, [items, itemOffset, itemsPerPage]);
+  useEffect(() => {
+    asyncFn();
+  }, []);
 
-    const handlePageClick = (event) => {
-        const newOffset = (event.selected * itemsPerPage) % items.length;
-        
-        setItemOffset(newOffset);
-    };
-    const getC = (value) => {
-        if (value) {
-            const res = items.filter(item => item.name.toLowerCase().includes(value.toLowerCase()))
-            if (res.length) {
-                setItems(res)
-                setError(false)
-            } else {
-                setError(true)
-            }
-        }
-        else {
-            setItems(deafaultItems)
-            setError(false)
-        }
+  const handlePageClick = (page) => {
+    const visibleItems = deafaultItems.slice((page - 1) * 30, 30 * page);
+    setItems(visibleItems);
+  };
+
+  const getSearchedItems = (value) => {
+    if (value) {
+      const res = deafaultItems.filter((item) =>
+        item.name.toLowerCase().includes(value.toLowerCase())
+      );
+      if (res.length) {
+        setDeafaultItems(res);
+        setError(false);
+      } else {
+        setError(true);
+      }
+    } else {
+      setDeafaultItems(defaultItemsRef.current);
+      setError(false);
     }
-    return (
-        <>
-            <div className="site-card-wrapper">
-                <Space direction="vertical" align="center">
-                    <Search
-                        placeholder="input search text"
-                        allowClear
-                        enterButton="Search"
-                        size="large"
-                        onSearch={getC}
-                    />
-                    <Alert message="Совпадений не найдено" type="error" className={error ? styles.showAlert : styles.hideAlert} />
-                </Space>
-                <Row gutter={[48, 16]}>
-                    <Items currentItems={currentItems} />
-                </Row>
-                <ReactPaginate
-                    previousLabel="Previous"
-                    nextLabel="Next"
-                    pageClassName="page-item"
-                    pageLinkClassName="page-link"
-                    previousClassName="page-item"
-                    previousLinkClassName="page-link"
-                    nextClassName="page-item"
-                    nextLinkClassName="page-link"
-                    breakLabel="..."
-                    breakClassName="page-item"
-                    breakLinkClassName="page-link"
-                    pageCount={pageCount}
-                    marginPagesDisplayed={2}
-                    pageRangeDisplayed={5}
-                    onPageChange={handlePageClick}
-                    containerClassName="pagination"
-                    activeClassName="active"
-                />
-            </div>
+  };
+  return (
+    <>
+      <div className="site-card-wrapper">
+        <Space direction="vertical" align="center">
+          <Search
+            placeholder="input search text"
+            allowClear
+            enterButton="Search"
+            size="large"
+            onSearch={getSearchedItems}
+          />
+          <Alert
+            message="Совпадений не найдено"
+            type="error"
+            className={error ? styles.showAlert : styles.hideAlert}
+          />
+        </Space>
+        <Row gutter={[48, 16]}>
+          <Items currentItems={items} />
+        </Row>
 
-        </>
+        <Pagination
+          defaultCurrent={1}
+          onChange={handlePageClick}
+          pageSize={itemsPerPage}
+          total={deafaultItems.length}
+        />
+      </div>
+    </>
+  );
+};
 
-    );
-}
-
-export default PaginatedItems
+export default PaginatedItems;
