@@ -53,12 +53,11 @@ const PaginatedItems = () => {
             setItems(deafaultItems)
             setError(false)
         }
-
     }
     return (
         <>
             <div className="site-card-wrapper">
-                <Space direction="vertical">
+                <Space direction="vertical" align="center">
                     <Search
                         placeholder="input search text"
                         allowClear
@@ -66,7 +65,7 @@ const PaginatedItems = () => {
                         size="large"
                         onSearch={getC}
                     />
-                    <Alert message="Error Text" type="error" className={error ? styles.showAlert : styles.hideAlert} />
+                    <Alert message="Совпадений не найдено" type="error" className={error ? styles.showAlert : styles.hideAlert} />
                 </Space>
                 <Row gutter={[48, 16]}>
                     <Items currentItems={currentItems} />

@@ -1,6 +1,5 @@
 import './App.css';
 import 'antd/dist/antd.css';
-import SearchItems from './cmp/Search/Search';
 import PaginatedItems from './cmp/Cosmetics/Cosmetics';
 
 function App() {
