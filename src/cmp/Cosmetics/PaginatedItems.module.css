@@ -1,0 +1,7 @@
+.main {
+    margin: auto;
+    height: 90vh;
+    width: 95vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}

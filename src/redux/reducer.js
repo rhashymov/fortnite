@@ -18,7 +18,7 @@ const reducer = (state = initialState, action) => {
 
 export const setCosmeticsData = (cosmetics) => ({
   type: SET_COSMETICS_DATA,
-  cosmetics,
+  cosmetics
 });
 
 // хорошо бы вынести в отдельный файл запрос

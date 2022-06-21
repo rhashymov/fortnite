@@ -1,10 +1,11 @@
 import { useDispatch } from "react-redux";
 import { getCosmetics } from "../../redux/reducer";
-import { Row, Input, Space, Alert, Pagination } from "antd";
+import { Row, Pagination } from "antd";
 import { useEffect, useRef, useState } from "react";
 import Items from "./Items/Items";
-import styles from "./Cosmetics.module.css";
-const { Search } = Input;
+import styles from "./PaginatedItems.module.css";
+import SearchContainer from "./Search/Search";
+
 
 const PaginatedItems = () => {
   const itemsPerPage = 30;
@@ -28,7 +29,7 @@ const PaginatedItems = () => {
   }, []);
 
   const handlePageClick = (page) => {
-    const visibleItems = deafaultItems.slice((page - 1) * 30, 30 * page);
+    const visibleItems = deafaultItems.slice((page - 1) * 25, 25 * page);
     setItems(visibleItems);
   };
 
@@ -50,25 +51,13 @@ const PaginatedItems = () => {
   };
   return (
     <>
-      <div className="site-card-wrapper">
-        <Space direction="vertical" align="center">
-          <Search
-            placeholder="input search text"
-            allowClear
-            enterButton="Search"
-            size="large"
-            onSearch={getSearchedItems}
-          />
-          <Alert
-            message="Совпадений не найдено"
-            type="error"
-            className={error ? styles.showAlert : styles.hideAlert}
-          />
-        </Space>
-        <Row gutter={[48, 16]}>
+      <div>
+     <SearchContainer getSearchedItems={getSearchedItems} error={error}/>
+        <div className={styles.main}>
+        <Row gutter={[8,16]}>
           <Items currentItems={items} />
         </Row>
-
+        </div>
         <Pagination
           defaultCurrent={1}
           onChange={handlePageClick}
