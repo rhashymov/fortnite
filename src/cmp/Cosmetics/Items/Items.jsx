@@ -1,15 +1,18 @@
 import { Col, Modal } from 'antd'
 import { useState } from 'react';
-import { Navigate } from 'react-router-dom';
 import styles from './Items.module.css'
 
 const Items = ({ currentItems }) => {
     const [isModalVisible, setIsModalVisible] = useState();
+    const [popupData, setPopupData] = useState({
+        name: null,
+        title: null,
+        images: {
+            icon: null
+        }})
 
-    const openModal = (item) => {
-        setIsModalVisible({ modalIsOpen: true, item });
-    }
-    const showModal = () => {
+    const showModal = (item) => {
+        setPopupData(item)
         setIsModalVisible(true);
     };
 
@@ -23,20 +26,20 @@ const Items = ({ currentItems }) => {
     return (<>
         {currentItems && currentItems.map((item) => (
             <>
-                <Col span={6}>
-                    <div className={styles.card} key={item.id} onClick={showModal}>
+                <Col span={4}>
+                    <div className={styles.card} key={item.id} onClick={() => showModal(item)}>
                         <div><img alt='cosmetics' className={styles.banner} src={item.images.smallIcon} /></div>
                         <div> {item.title}</div>
                         <div className={styles.itemName}>{item.name}</div>
                         <div>{item.description}</div>
-
                     </div>
                 </Col>
-                <Modal title={item.name} visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-                    <img alt='cosmetics' src={item.images.icon} />
-                </Modal>
             </>
-        ))}
+       ))}
+        <Modal title={popupData.name} visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+       <div>{popupData.title}</div>
+       <img alt='cosmetics' src={popupData.images.smallIcon} />
+        </Modal>
     </>
     )
 }

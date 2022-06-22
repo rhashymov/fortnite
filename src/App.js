@@ -4,12 +4,8 @@ import PaginatedItems from './cmp/Cosmetics/PaginatedItems';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-      </header>
-      <div>
+    <div className="App">     
        <PaginatedItems />
-      </div>
     </div>
 
   );

@@ -26,7 +26,6 @@ export const getCosmetics = () => (dispatch) => {
   return cosmeticsAPI.getCosmetics().then((response) => {
     if (response.status === 200) {
       dispatch(setCosmeticsData(response.data));
-      return response.data;
     } else {
       return console.log("Поиск не удался");
     }

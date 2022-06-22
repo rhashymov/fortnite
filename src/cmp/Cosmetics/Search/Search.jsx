@@ -4,8 +4,8 @@ const { Search } = Input;
 
 const SearchContainer = ({getSearchedItems, error}) => {
   return (
-    <Space direction="vertical" align="center">
-    <Search
+    <Space  direction="vertical">
+    <Search className={styles.conteiner}
       placeholder="input search text"
       allowClear
       enterButton="Search"

@@ -5,3 +5,11 @@
     overflow-y: scroll;
     overflow-x: hidden;
 }
+.search {
+    margin: auto;
+    width: 40vh;
+}
+.pagination {
+    margin: auto;
+    width: 60vh;
+}
