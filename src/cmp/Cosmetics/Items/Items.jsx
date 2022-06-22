@@ -37,8 +37,9 @@ const Items = ({ currentItems }) => {
             </>
        ))}
         <Modal title={popupData.name} visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-       <div>{popupData.title}</div>
        <img alt='cosmetics' src={popupData.images.smallIcon} />
+       <div>id:{popupData.id}</div>
+       <div>{popupData.introdu}</div>
         </Modal>
     </>
     )
