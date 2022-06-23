@@ -18,8 +18,15 @@ const PaginatedItems = () => {
     // так не сработает этих данных еще нету в defaultItems
     // сделай тут console.log(defaultItems) и увидишь сам
     // надо сделать на это отдельный useEffect который будет срабатывать когда данные появтся но при этом только 1 раз
-    setItems(defaultItems.slice(0, 30));
   }
+  const setFirstVisibleItems = () => {
+    if(defaultItems) {
+      setItems(defaultItems.slice(0, 30));
+    }
+    
+  }
+
+  
 
   const handlePageClick = (page) => {
     const visibleItems = defaultItems.slice((page - 1) * 30, 30 * page);
@@ -40,13 +47,16 @@ const PaginatedItems = () => {
     } else {
       // ошибка поиска при очистке вот тут
       // кстати при очистке ты увидишь что приложение повиснет на секунду две
-      setItems(items);
+      setFirstVisibleItems()
       setError(false);
     }
   };
   useEffect(() => {
     asyncFn();
   }, []);
+  useEffect(() => {
+    setFirstVisibleItems()
+  },[defaultItems])
 
   return (
     <>
