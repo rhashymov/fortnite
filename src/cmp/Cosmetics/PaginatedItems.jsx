@@ -6,27 +6,20 @@ import Items from "./Items/Items";
 import styles from "./PaginatedItems.module.css";
 import SearchContainer from "./Search/Search";
 
-
 const PaginatedItems = () => {
-
   const itemsPerPage = 30;
   const dispatch = useDispatch();
   const [items, setItems] = useState([]);
   const [error, setError] = useState(false);
-  const defaultItems = useSelector(state => state.cosmetics.cosmetics);
-  //вроде как лишнее
+  const defaultItems = useSelector((state) => state.cosmetics.cosmetics);
 
-  // async function asyncFn() {
-  //   const res = await dispatch(getCosmetics());
-  //   setItems(res.slice(0, 30));
-  //   setDeafaultItems(res);
-  //   defaultItemsRef.current = res;
-  // }
   async function asyncFn() {
     await dispatch(getCosmetics());
+    // так не сработает этих данных еще нету в defaultItems
+    // сделай тут console.log(defaultItems) и увидишь сам
+    // надо сделать на это отдельный useEffect который будет срабатывать когда данные появтся но при этом только 1 раз
     setItems(defaultItems.slice(0, 30));
   }
-
 
   const handlePageClick = (page) => {
     const visibleItems = defaultItems.slice((page - 1) * 30, 30 * page);
@@ -39,18 +32,20 @@ const PaginatedItems = () => {
         item.name.toLowerCase().includes(value.toLowerCase())
       );
       if (res.length) {
-        setItems(res)
-        setError(false)
+        setItems(res);
+        setError(false);
       } else {
         setError(true);
       }
     } else {
-      setItems(items)
+      // ошибка поиска при очистке вот тут
+      // кстати при очистке ты увидишь что приложение повиснет на секунду две
+      setItems(items);
       setError(false);
     }
   };
   useEffect(() => {
-    asyncFn()
+    asyncFn();
   }, []);
 
   return (
